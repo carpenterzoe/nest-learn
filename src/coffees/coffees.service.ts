@@ -34,9 +34,10 @@ export class CoffeesService {
 ​
   create(createCoffeeDto: any) {
     this.coffees.push(createCoffeeDto);
+    return createCoffeeDto
   }
 ​
-  update(id: string, UpdateCoffeeDto: UpdateCoffeeDto) {
+  update(id: string, updateCoffeeDto: UpdateCoffeeDto) {
     const existingCoffee = this.findOne(id);
     if (existingCoffee) {
       // update the existing entity
