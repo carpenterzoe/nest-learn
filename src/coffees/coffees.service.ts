@@ -46,10 +46,32 @@ export class CoffeesService {
   }
 ​
   async update(id: string, updateCoffeeDto: UpdateCoffeeDto) {
-    const existingCoffee = await this.findOne(id);
-    if (existingCoffee) {
-      // update the existing entity
+    // if there's no flavors within input params, varable flavors will be "undefined".
+    // "undefined" won't rewrite existing data
+    const flavors = 
+      updateCoffeeDto.flavors && 
+      (await Promise.all(
+        updateCoffeeDto.flavors.map(name => this.preloadFlavorByName(name)
+      ))
+    )
+    // Q: what's the diff between fineOne & preload ?
+    // A: preload 从数据库加载现有实体并替换其某些属性
+
+    // what does "repository.update func" do ?
+
+    // const existingCoffee = await this.findOne(id);
+    // if (existingCoffee) {
+    //   this.coffeeRepository.update(id, {...updateCoffeeDto, flavors})
+    // }
+    const coffee = await this.coffeeRepository.preload({
+      id: +id,
+      ...updateCoffeeDto,
+      flavors
+    })
+    if (!coffee) {
+      throw new NotFoundException(`Coffee #${id} not found`);
     }
+    return this.coffeeRepository.save(coffee);
   }
 ​
   async remove(id: string) {
