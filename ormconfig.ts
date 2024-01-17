@@ -1,18 +1,14 @@
-import { DataSource } from "typeorm";
+import { DataSource } from 'typeorm'
 
-const connectionSource = new DataSource({
-  migrationsTableName: 'migrations',
+export const AppDataSource = new DataSource({
   type: 'postgres',
   host: 'localhost',
   port: 5432,
   username: 'postgres',
   password: 'pass123',
   database: 'postgres',
-  logging: false,
+  entities: ['dist/**/*.entity.js'],
   synchronize: false,
-  entities: ['src/**/entities/**.entity{.ts,.js}'],
-  migrations: ['src/migrations/*{.ts,.js}'],
-  subscribers: ['src/subscriber/**/*{.ts,.js}'],
-});
-
-export default connectionSource;
+  migrationsRun: false,
+  migrations: ['dist/**/migrations/*.js'],
+})
