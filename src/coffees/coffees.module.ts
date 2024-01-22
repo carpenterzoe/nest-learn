@@ -9,6 +9,7 @@ import { Flavor } from './entities/flavor.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Coffee, Flavor, Event])],
   controllers: [CoffeesController],
+  // 在 CoffeesModule 中，向 Nest loC(控制反转) 容器注册 providers.
   providers: [CoffeesService]
 })
 export class CoffeesModule {}
