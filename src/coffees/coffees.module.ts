@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Injectable, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Event } from 'src/events/entities/event.entity/event.entity';
 import { COFFEE_BRANDS } from './coffees.contants';
@@ -12,6 +12,13 @@ class MockCoffeesService {}
 class ConfigService {}
 class DevelopmentConfigService {}
 class ProductionConfigService {}
+
+@Injectable()
+export class CoffeeBrandsFactory {
+  create() {
+    return ['buddy brew 3', 'nescfe 3']
+  }
+}
 
 @Module({
   imports: [TypeOrmModule.forFeature([Coffee, Flavor, Event])],
@@ -28,17 +35,24 @@ class ProductionConfigService {}
   // ],
   providers: [
     CoffeesService,
-    {
-      provide: COFFEE_BRANDS,
-      useValue: ['buddy brew', 'nescfe']
-    },
+    CoffeeBrandsFactory,  // provider 要定义在这，useFactory 中才能使用
     {
       provide: ConfigService,
       useClass: 
         process.env.NODE_ENV === 'development'
           ? DevelopmentConfigService 
           : ProductionConfigService
-    }
+    },
+    // {
+    //   provide: COFFEE_BRANDS,
+    //   useValue: ['buddy brew', 'nescfe']
+    // },
+    {
+      provide: COFFEE_BRANDS,
+      useFactory: (brandsFactory: CoffeeBrandsFactory) => 
+        brandsFactory.create(),
+      inject: [CoffeeBrandsFactory],  // "inject" takes in an Array of Providers itself.
+    },
   ],
 
   /**
