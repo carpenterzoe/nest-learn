@@ -17,6 +17,10 @@ import { Flavor } from './entities/flavor.entity'
  * @Injectable decorator declaras a class that can be managed by the Nest "container".
  * This decorator marks the CoffeeService class as a "Provider".
  */
+
+// @Injectable() // marks the CoffeeService class as a "Provider".
+// @Injectable({ scope: Scope.DEFAULT }) // 默认行为，单例
+// @Injectable({ scope: Scope.TRANSIENT })
 @Injectable() // marks the CoffeeService class as a "Provider".
 export class CoffeesService {
   constructor(
