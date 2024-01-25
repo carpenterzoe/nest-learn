@@ -1,22 +1,22 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto/pagination-query.dto';
-import { Event } from 'src/events/entities/event.entity/event.entity';
-import { DataSource, Repository } from 'typeorm';
-import { COFFEE_BRANDS } from './coffees.contants';
-import { CreateCoffeeDto } from './dto/create-coffee.dto/create-coffee.dto';
-import { UpdateCoffeeDto } from './dto/update-coffee.dto/update-coffee.dto';
-import { Coffee } from './entities/coffee.entity';
-import { Flavor } from './entities/flavor.entity';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto/pagination-query.dto'
+import { Event } from 'src/events/entities/event.entity/event.entity'
+import { DataSource, Repository } from 'typeorm'
+import { COFFEE_BRANDS } from './coffees.contants'
+import { CreateCoffeeDto } from './dto/create-coffee.dto/create-coffee.dto'
+import { UpdateCoffeeDto } from './dto/update-coffee.dto/update-coffee.dto'
+import { Coffee } from './entities/coffee.entity'
+import { Flavor } from './entities/flavor.entity'
 
 /**
  * Service 处理业务逻辑的核心，与数据源交互
  */
 
- /**
-  * @Injectable decorator declaras a class that can be managed by the Nest "container".
-  * This decorator marks the CoffeeService class as a "Provider".
-  */ 
+/**
+ * @Injectable decorator declaras a class that can be managed by the Nest "container".
+ * This decorator marks the CoffeeService class as a "Provider".
+ */
 @Injectable() // marks the CoffeeService class as a "Provider".
 export class CoffeesService {
   constructor(
@@ -30,7 +30,7 @@ export class CoffeesService {
     // 当 provider token 不是 class 时
     @Inject(COFFEE_BRANDS) coffeeBrands: string[],
   ) {
-    console.log('coffeeBrands: ', coffeeBrands);
+    console.log('coffeeBrands: ', coffeeBrands)
   }
 
   findAll(paginationQuery: PaginationQueryDto) {
@@ -41,39 +41,41 @@ export class CoffeesService {
       relations: ['flavors'],
       skip: offset,
       take: limit,
-    });
+    })
   }
-​
+
   findOne(id: string) {
-    const coffee = this.coffeeRepository.findOne({ where: { id: parseInt(id, 10) }, relations: ['flavors']});
+    const coffee = this.coffeeRepository.findOne({
+      where: { id: parseInt(id, 10) },
+      relations: ['flavors'],
+    })
     if (!coffee) {
       throw new NotFoundException(`Coffee #${id} not found`)
     }
     return coffee
   }
-​
+
   async create(createCoffeeDto: CreateCoffeeDto) {
     const flavors = await Promise.all(
-      createCoffeeDto.flavors.map(name => this.preloadFlavorByName(name))
+      createCoffeeDto.flavors.map((name) => this.preloadFlavorByName(name))
     )
     // only create, not save to db
     const coffee = this.coffeeRepository.create({
       ...createCoffeeDto,
-      flavors
-    });
+      flavors,
+    })
     // utilize "save method" to save to db
-    return this.coffeeRepository.save(coffee);
+    return this.coffeeRepository.save(coffee)
   }
-​
+
   async update(id: string, updateCoffeeDto: UpdateCoffeeDto) {
     // if there's no flavors within input params, varable flavors will be "undefined".
     // "undefined" won't rewrite existing data
-    const flavors = 
-      updateCoffeeDto.flavors && 
+    const flavors =
+      updateCoffeeDto.flavors &&
       (await Promise.all(
-        updateCoffeeDto.flavors.map(name => this.preloadFlavorByName(name)
+        updateCoffeeDto.flavors.map((name) => this.preloadFlavorByName(name))
       ))
-    )
     // Q: what's the diff between fineOne & preload ?
     // A: preload 从数据库加载现有实体并替换其某些属性
 
@@ -86,35 +88,30 @@ export class CoffeesService {
     const coffee = await this.coffeeRepository.preload({
       id: +id,
       ...updateCoffeeDto,
-      flavors
+      flavors,
     })
     if (!coffee) {
-      throw new NotFoundException(`Coffee #${id} not found`);
+      throw new NotFoundException(`Coffee #${id} not found`)
     }
-    return this.coffeeRepository.save(coffee);
+    return this.coffeeRepository.save(coffee)
   }
-​
   async remove(id: string) {
     const coffee = await this.findOne(id)
-    return this.coffeeRepository.remove(coffee);
+    return this.coffeeRepository.remove(coffee)
   }
 
   async recommendCoffee(coffee: Coffee) {
     const queryRunner = this.dataSource.createQueryRunner()
     await queryRunner.connect()
     await queryRunner.startTransaction()
-
     try {
       coffee.recommendations++
-
       const recommendEvent = new Event()
       recommendEvent.name = 'recommend_coffee'
       recommendEvent.type = 'coffee'
       recommendEvent.payload = { coffeeId: coffee.id }
-
       await queryRunner.manager.save(coffee)
       await queryRunner.manager.save(recommendEvent)
-
       await queryRunner.commitTransaction()
     } catch (error) {
       await queryRunner.rollbackTransaction()
@@ -124,14 +121,15 @@ export class CoffeesService {
   }
 
   async preloadFlavorByName(name: string): Promise<Flavor> {
-    const existingFlavor = await this.flavorRepository.findOne({ where: { name } })
+    const existingFlavor = await this.flavorRepository.findOne({
+      where: { name },
+    })
     if (existingFlavor) return existingFlavor
 
     // notice! don't need to await response, cuz the res will be resolve by outside Promise.all
 
     // const newFlavor = await this.flavorRepository.create({ name })
     // return newFlavor
-    
     return this.flavorRepository.create({ name })
   }
 }
