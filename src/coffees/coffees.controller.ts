@@ -1,28 +1,43 @@
-import { Body, Controller, Get, Post, Param, Patch, Delete, Query } from '@nestjs/common';
-import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto/pagination-query.dto';
-import { CoffeesService } from './coffees.service';
-import { CreateCoffeeDto } from './dto/create-coffee.dto/create-coffee.dto';
-import { UpdateCoffeeDto } from './dto/update-coffee.dto/update-coffee.dto';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Param,
+  Patch,
+  Delete,
+  Query,
+} from '@nestjs/common'
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto/pagination-query.dto'
+import { CoffeesService } from './coffees.service'
+import { CreateCoffeeDto } from './dto/create-coffee.dto/create-coffee.dto'
+import { UpdateCoffeeDto } from './dto/update-coffee.dto/update-coffee.dto'
 
 @Controller('coffees')
 export class CoffeesController {
   // keyword readonly ensure we aren't modifying the service referenced,
   // only accessing things from it.
+
+  /**
+   * we can see we are requesting the CoffeeService in our constructor.
+   *
+   * This request tells Nest to "inject" the provider into our controller class
+   * so that we may be able to utilize it.
+   */
   constructor(private readonly coffeeService: CoffeesService) {
     // nest会自动创建并返回 CoffeesService 实例，供 controller 调用
-    
     /**
      * 为什么在构造函数中这样写，就能把CoffeeServie注入？
-     * 
+     *
      * 3 key steps:
-     * 
-     * 1. in our CoffeeService, @Injectable decorator declaras a class 
+     *
+     * 1. in our CoffeeService, @Injectable decorator declaras a class
      * that can be managed by the Nest "container".
      * This decorator marks the CoffeeService class as a "Provider".
-     * 
+     *
      * 2. request the CoffeeService in our constructor.
      * This request tells Nest to "inject" the provider into our controller class.
-     * 
+     *
      * 3. In CoffeesModule, registers this Providers.
      * 在 CoffeesModule 中，向 Nest loC(控制反转) 容器注册 providers.
      */

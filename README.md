@@ -71,3 +71,11 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+
+## github代码更新不了 操作：
+- 查ip地址：https://sites.ipaddress.com/github.com/#ipinfo
+- 到这里改hosts： C:\Windows\System32\drivers\etc
+- 刷新dns缓存 ipconfig /flushdns
+- ping github.com
+- 用 terminal，git命令更新代码

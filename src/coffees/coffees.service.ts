@@ -18,6 +18,13 @@ import { Flavor } from './entities/flavor.entity'
  * This decorator marks the CoffeeService class as a "Provider".
  */
 
+/**
+ * 在NestJS中，依赖关系通常被视为单例。
+ * 这意味着 一旦找到依赖项，它的值就会被缓存并在整个应用程序生命周期中重用。
+ *
+ * 要在NestJS中更改此行为，需要配置“@Injectable”装饰器选项的“scope”属性。
+ */
+
 // @Injectable() // marks the CoffeeService class as a "Provider".
 // @Injectable({ scope: Scope.DEFAULT }) // 默认行为，单例
 // @Injectable({ scope: Scope.TRANSIENT })
@@ -32,7 +39,7 @@ export class CoffeesService {
     private readonly dataSource: DataSource,
 
     // 当 provider token 不是 class 时
-    @Inject(COFFEE_BRANDS) coffeeBrands: string[],
+    @Inject(COFFEE_BRANDS) coffeeBrands: string[]
   ) {
     console.log('coffeeBrands: ', coffeeBrands)
   }
