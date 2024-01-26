@@ -6,10 +6,19 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { CoffeeRatingModule } from './coffee-rating/coffee-rating.module'
 import { DatabaseModule } from './database/database.module'
 import { ConfigModule } from '@nestjs/config'
+import Joi from '@hapi/joi'
 
 @Module({
   imports: [
-    ConfigModule.forRoot(), // 未使用该模块，则获取不到 process.env ?
+    ConfigModule.forRoot({
+      // envFilePath: '.environment', // 另外指定配置文件
+      // ignoreEnvFile: true, // 忽略env(在生产环境用别的工具（比如Heroku）配置时?)
+      // 用 Joi 包 校验env的配置
+      validationSchema: Joi.object({
+        DATABASE_HOST: Joi.required(),
+        DATABASE_PORT: Joi.number().default(5432),
+      }),
+    }), // 未使用该模块，则获取不到 process.env ?
     CoffeesModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
