@@ -8,7 +8,9 @@ import { CreateCoffeeDto } from './dto/create-coffee.dto/create-coffee.dto'
 import { UpdateCoffeeDto } from './dto/update-coffee.dto/update-coffee.dto'
 import { Coffee } from './entities/coffee.entity'
 import { Flavor } from './entities/flavor.entity'
-import { ConfigService } from '@nestjs/config'
+// import { ConfigService, ConfigType } from '@nestjs/config'
+import { ConfigType } from '@nestjs/config'
+import coffeesConfig from './config/coffees.config'
 
 /**
  * Service 处理业务逻辑的核心，与数据源交互
@@ -41,7 +43,10 @@ export class CoffeesService {
 
     // 当 provider token 不是 class 时
     @Inject(COFFEE_BRANDS) coffeeBrands: string[],
-    private readonly configService: ConfigService
+    // private readonly configService: ConfigService
+    @Inject(coffeesConfig.KEY)
+    private readonly coffeesConfiguration: ConfigType<typeof coffeesConfig>
+    // private readonly coffeesConfiguration: ConfigType<typeof coffeesConfig>,
   ) {
     // console.log('coffeeBrands: ', coffeeBrands)
 
@@ -50,8 +55,11 @@ export class CoffeesService {
     //   // 'localhost'  // sane default
     // )
     // console.log('databaseHost: ', databaseHost)
-    const coffeesConfig = this.configService.get('coffees')
-    console.log('coffeesConfig: ', coffeesConfig)
+
+    // const coffeesConfig = this.configService.get('coffees')
+    // console.log('coffeesConfig: ', coffeesConfig)
+
+    console.log(coffeesConfiguration.foo)
   }
 
   findAll(paginationQuery: PaginationQueryDto) {
