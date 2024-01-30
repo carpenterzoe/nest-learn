@@ -45,11 +45,13 @@ export class CoffeesService {
   ) {
     // console.log('coffeeBrands: ', coffeeBrands)
 
-    const databaseHost = this.configService.get<string>(
-      'database.host'
-      // 'localhost'  // sane default
-    )
-    console.log('databaseHost: ', databaseHost)
+    // const databaseHost = this.configService.get<string>(
+    //   'database.host'
+    //   // 'localhost'  // sane default
+    // )
+    // console.log('databaseHost: ', databaseHost)
+    const coffeesConfig = this.configService.get('coffees')
+    console.log('coffeesConfig: ', coffeesConfig)
   }
 
   findAll(paginationQuery: PaginationQueryDto) {

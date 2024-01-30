@@ -8,6 +8,7 @@ import { CoffeesService } from './coffees.service'
 import { Coffee } from './entities/coffee.entity'
 import { Flavor } from './entities/flavor.entity'
 import { ConfigModule } from '@nestjs/config'
+import coffeesConfig from './config/coffees.config'
 
 // class MockCoffeesService {}
 
@@ -23,7 +24,10 @@ export class CoffeeBrandsFactory {
 }
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Coffee, Flavor, Event]), ConfigModule],
+  imports: [
+    TypeOrmModule.forFeature([Coffee, Flavor, Event]),
+    ConfigModule.forFeature(coffeesConfig),
+  ],
   controllers: [CoffeesController],
 
   // 在 CoffeesModule 中，向 Nest loC(控制反转) 容器注册 providers.
