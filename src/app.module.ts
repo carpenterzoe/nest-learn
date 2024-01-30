@@ -7,10 +7,12 @@ import { CoffeeRatingModule } from './coffee-rating/coffee-rating.module'
 import { DatabaseModule } from './database/database.module'
 import { ConfigModule } from '@nestjs/config'
 import * as Joi from '@hapi/joi'
+import appConfig from './config/app.config'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      load: [appConfig],
       // envFilePath: '.environment', // 另外指定配置文件
       // ignoreEnvFile: true, // 忽略env(在生产环境用别的工具（比如Heroku）配置时?)
       // 用 Joi 包 校验env的配置
