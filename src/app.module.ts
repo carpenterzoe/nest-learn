@@ -11,6 +11,19 @@ import appConfig from './config/app.config'
 
 @Module({
   imports: [
+    // 顺序调换之后编译器报错！ 所以改成异步
+    TypeOrmModule.forRootAsync({
+      useFactory: () => ({
+        type: 'postgres',
+        host: process.env.DATABASE_HOST,
+        port: +process.env.DATABASE_POST,
+        username: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE_NAME,
+        autoLoadEntities: true,
+        synchronize: true,
+      }),
+    }),
     ConfigModule.forRoot({
       load: [appConfig],
       // envFilePath: '.environment', // 另外指定配置文件
@@ -22,16 +35,6 @@ import appConfig from './config/app.config'
       }),
     }), // 未使用该模块，则获取不到 process.env ?
     CoffeesModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DATABASE_HOST,
-      port: +process.env.DATABASE_POST,
-      username: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
     CoffeeRatingModule,
     DatabaseModule,
   ],

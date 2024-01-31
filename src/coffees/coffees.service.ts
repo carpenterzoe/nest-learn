@@ -45,8 +45,7 @@ export class CoffeesService {
     @Inject(COFFEE_BRANDS) coffeeBrands: string[],
     // private readonly configService: ConfigService
     @Inject(coffeesConfig.KEY)
-    private readonly coffeesConfiguration: ConfigType<typeof coffeesConfig>
-    // private readonly coffeesConfiguration: ConfigType<typeof coffeesConfig>,
+    private readonly coffeesConfiguration: ConfigType<typeof coffeesConfig> // ConfigType 工具类型，帮助类型推断coffeesConfig中的 key value
   ) {
     // console.log('coffeeBrands: ', coffeeBrands)
 
