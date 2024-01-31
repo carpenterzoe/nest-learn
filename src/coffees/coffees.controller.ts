@@ -7,12 +7,16 @@ import {
   Patch,
   Delete,
   Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common'
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto/pagination-query.dto'
 import { CoffeesService } from './coffees.service'
 import { CreateCoffeeDto } from './dto/create-coffee.dto/create-coffee.dto'
 import { UpdateCoffeeDto } from './dto/update-coffee.dto/update-coffee.dto'
 
+// @UsePipes(new ValidationPipe()) // 如果针对特定场景需要自定义配置，则可以自己实例化；但尽可能不要用这种方式(非全局的单例，Nest无法重用该实例，占内存)
+@UsePipes(ValidationPipe)
 @Controller('coffees')
 export class CoffeesController {
   // keyword readonly ensure we aren't modifying the service referenced,
@@ -43,6 +47,7 @@ export class CoffeesController {
      */
   }
 
+  @UsePipes(ValidationPipe) // @UsePipes() 作用于单个路由
   @Get()
   findAll(@Query() paginationQuery: PaginationQueryDto) {
     return this.coffeeService.findAll(paginationQuery)
@@ -73,7 +78,11 @@ export class CoffeesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() UpdateCoffeeDto: UpdateCoffeeDto) {
+  update(
+    // what if we want to bind a Pipe to the 'body' but not the 'id' parameter ?
+    @Param('id') id: string,
+    @Body(ValidationPipe) UpdateCoffeeDto: UpdateCoffeeDto
+  ) {
     // return `update #${id} coffee`
     return this.coffeeService.update(id, UpdateCoffeeDto)
   }
