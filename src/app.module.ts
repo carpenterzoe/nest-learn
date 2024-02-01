@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config'
 import * as Joi from '@hapi/joi'
 import appConfig from './config/app.config'
 import { APP_PIPE } from '@nestjs/core'
+import { TransferModule } from './transfer/transfer.module'
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { APP_PIPE } from '@nestjs/core'
     CoffeesModule,
     CoffeeRatingModule,
     DatabaseModule,
+    TransferModule,
   ],
   controllers: [AppController],
   providers: [
