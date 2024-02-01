@@ -72,8 +72,8 @@ export class CoffeesService {
     })
   }
 
-  findOne(id: string) {
-    const coffee = this.coffeeRepository.findOne({
+  async findOne(id: string) {
+    const coffee = await this.coffeeRepository.findOne({
       where: { id: parseInt(id, 10) },
       relations: ['flavors'],
     })

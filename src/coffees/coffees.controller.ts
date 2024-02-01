@@ -15,6 +15,9 @@ import { CoffeesService } from './coffees.service'
 import { CreateCoffeeDto } from './dto/create-coffee.dto/create-coffee.dto'
 import { UpdateCoffeeDto } from './dto/update-coffee.dto/update-coffee.dto'
 
+// new 实例的话，优点是 可以自己传配置， 缺点是 无法共用全局同一个实例，所以尽量用class以减少内存使用
+// @UsePipes(new ValidationPipe(options))
+
 // @UsePipes(new ValidationPipe()) // 如果针对特定场景需要自定义配置，则可以自己实例化；但尽可能不要用这种方式(非全局的单例，Nest无法重用该实例，占内存)
 @UsePipes(ValidationPipe)
 @Controller('coffees')
