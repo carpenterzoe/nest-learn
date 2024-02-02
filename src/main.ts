@@ -3,6 +3,7 @@ import { AppModule } from './app.module'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { ValidationPipe } from '@nestjs/common'
 import { HttpExceptionFilter } from './common/filter/http-exception/http-exception.filter'
+import { WrapResponseInterceptor } from './common/interceptors/wrap-response/wrap-response.interceptor'
 // import { ApiKeyGuard } from './common/guards/api-key/api-key.guard'
 
 async function bootstrap() {
@@ -21,6 +22,7 @@ async function bootstrap() {
   )
   app.useGlobalFilters(new HttpExceptionFilter())
   // app.useGlobalGuards(new ApiKeyGuard()) // 在Common Module中注入了，因为 ApiKeyGuard 内部有其他依赖
+  app.useGlobalInterceptors(new WrapResponseInterceptor())
   app.enableCors()
   await app.listen(3000)
 }
