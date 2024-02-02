@@ -10,6 +10,7 @@ import * as Joi from '@hapi/joi'
 import appConfig from './config/app.config'
 import { APP_PIPE } from '@nestjs/core'
 import { TransferModule } from './transfer/transfer.module'
+import { CommonModule } from './common/common.module'
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { TransferModule } from './transfer/transfer.module'
     CoffeeRatingModule,
     DatabaseModule,
     TransferModule,
+    CommonModule,
   ],
   controllers: [AppController],
   providers: [
