@@ -14,6 +14,7 @@ import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto/paginati
 import { CoffeesService } from './coffees.service'
 import { CreateCoffeeDto } from './dto/create-coffee.dto/create-coffee.dto'
 import { UpdateCoffeeDto } from './dto/update-coffee.dto/update-coffee.dto'
+import { Public } from 'src/common/decorators/public.decorator'
 
 // new 实例的话，优点是 可以自己传配置， 缺点是 无法共用全局同一个实例，所以尽量用class以减少内存使用
 // @UsePipes(new ValidationPipe(options))
@@ -50,6 +51,8 @@ export class CoffeesController {
      */
   }
 
+  // @SetMetadata('isPublic', true) // 将 SetMetadata 包装到自定义的装饰器中，避免每次都要传 key value
+  @Public()
   @UsePipes(ValidationPipe) // @UsePipes() 作用于单个路由
   @Get()
   findAll(@Query() paginationQuery: PaginationQueryDto) {

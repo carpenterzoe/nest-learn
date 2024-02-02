@@ -1,11 +1,13 @@
 import { HttpService } from '@nestjs/axios'
 import { Controller, Get, Param, Res } from '@nestjs/common'
 import { lastValueFrom } from 'rxjs'
+import { Public } from 'src/common/decorators/public.decorator'
 
 @Controller('transfer')
 export class TransferController {
   constructor(private httpService: HttpService) {}
 
+  @Public()
   @Get(':path(*)')
   async upload(@Res() res, @Param('path') path: string) {
     const targetBaseUrl = '' // 这里输入目标baseurl，比如 http://www.clady.cn 结尾不要带 /
