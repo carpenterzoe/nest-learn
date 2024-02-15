@@ -15,6 +15,7 @@ import { CoffeesService } from './coffees.service'
 import { CreateCoffeeDto } from './dto/create-coffee.dto/create-coffee.dto'
 import { UpdateCoffeeDto } from './dto/update-coffee.dto/update-coffee.dto'
 import { Public } from 'src/common/decorators/public.decorator'
+import { ParseIntPipe } from 'src/common/pipes/parse-int/parse-int.pipe'
 
 // new 实例的话，优点是 可以自己传配置， 缺点是 无法共用全局同一个实例，所以尽量用class以减少内存使用
 // @UsePipes(new ValidationPipe(options))
@@ -73,7 +74,8 @@ export class CoffeesController {
   // }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
+    console.log('id: ', id)
     // return `I want no.${id} coffee.`
     return this.coffeeService.findOne(id)
   }
