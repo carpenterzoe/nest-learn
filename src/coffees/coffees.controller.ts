@@ -16,6 +16,7 @@ import { CreateCoffeeDto } from './dto/create-coffee.dto/create-coffee.dto'
 import { UpdateCoffeeDto } from './dto/update-coffee.dto/update-coffee.dto'
 import { Public } from 'src/common/decorators/public.decorator'
 import { ParseIntPipe } from 'src/common/pipes/parse-int/parse-int.pipe'
+import { Protocol } from 'src/common/decorators/protocol.decorator'
 
 // new 实例的话，优点是 可以自己传配置， 缺点是 无法共用全局同一个实例，所以尽量用class以减少内存使用
 // @UsePipes(new ValidationPipe(options))
@@ -56,8 +57,12 @@ export class CoffeesController {
   @Public()
   @UsePipes(ValidationPipe) // @UsePipes() 作用于单个路由
   @Get()
-  async findAll(@Query() paginationQuery: PaginationQueryDto) {
-    await new Promise((resolve) => setTimeout(resolve, 5000))
+  findAll(
+    @Protocol('https') protocol: string,
+    @Query() paginationQuery: PaginationQueryDto
+  ) {
+    console.log({ protocol })
+    // await new Promise((resolve) => setTimeout(resolve, 5000))
     return this.coffeeService.findAll(paginationQuery)
   }
 
